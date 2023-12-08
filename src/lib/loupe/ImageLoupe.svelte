@@ -1,6 +1,6 @@
 <script lang="ts">
-	export let firstImageUrl = './lowres.webp';
-	export let secondImageUrl = './highres.webp';
+	export let firstImageUrl = '/lowres.webp';
+	// export let secondImageUrl = '/highres.webp';
 
 	let img: HTMLImageElement, imgBounds: DOMRect;
 	let comparismImage: HTMLDivElement;
@@ -180,7 +180,7 @@
 
 <style>
 	.comparism_image {
-		--background-image: url('./highres.webp');
+		--background-image: url('/highres.webp');
 		--width: 400px;
 		--height: 400px;
 		--left: 0%;
@@ -193,7 +193,7 @@
 		background-image: var(--background-image);
 	}
 	.magnifying_glass {
-		--background-image: url('./lowres.webp');
+		--background-image: url('/lowres.webp');
 		--left: 0%;
 		--top: 0%;
 		--width: 400px;
