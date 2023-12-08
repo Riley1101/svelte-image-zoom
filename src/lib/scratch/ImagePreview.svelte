@@ -18,8 +18,8 @@
 	let imageContainer: HTMLDivElement;
 	let indicator: HTMLDivElement;
 	let isPanning = false;
-
 	let imageState: State;
+
 	$: imageState = {
 		currentZoom: 1,
 		currentTranslateX: 0,
@@ -35,7 +35,6 @@
 		if (newZoom < MIN_ZOOM || newZoom > MAX_ZOOM) return;
 
 		imageState.currentZoom = Math.round(newZoom * 100) / 100;
-
 		// Reset translation when zooming out to the minimum zoom level
 		if (imageState.currentZoom === MIN_ZOOM) {
 			imageState.currentTranslateX = 0;
@@ -72,6 +71,7 @@
 		imageState.currentTranslateY = newTranslateY;
 
 		imageState = imageState;
+
 		sync_available_translate();
 		sync_image_container();
 	}
