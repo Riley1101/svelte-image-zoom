@@ -3,5 +3,5 @@
 </script>
 
 <main class="p-4 bg-zinc-800 h-screen grid place-items-center">
-	<ImageLoupe secondImageUrl="./highres.webp" firstImageUrl="./lowres.webp" />
+	<ImageLoupe firstImageUrl="/lowres.webp" />
 </main>

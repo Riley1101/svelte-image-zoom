@@ -112,7 +112,6 @@
 	function onMouseWheel(e: WheelEvent) {
 		if (!imgBounds) return;
 		let direction = e.deltaY < 0 ? 1 : -1;
-		console.log(zoomFactor);
 		// keep zoom factor between MAX_ZOOM and MIN_ZOOM
 		if (direction === 1) {
 			if (zoomFactor >= MAX_ZOOM) return;
@@ -156,7 +155,7 @@
 			alt="low res business monkey absolute"
 			bind:this={img}
 			draggable="false"
-			class="w-full w-[40vw] aspect-square"
+			class="aspect-square max-w-[200px] md:max-w-[600px]"
 			on:wheel={onMouseWheel}
 		/>
 	</button>
