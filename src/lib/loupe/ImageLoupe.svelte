@@ -258,7 +258,10 @@
 </div>
 
 {#if showStats}
-	<div class="mt-4 text-gray-800 border border-gray-200 max-w-max p-4 rounded-md" role="status">
+	<div
+		class="mt-4 text-gray-800 border border-gray-200 max-w-max px-4 py-2 rounded-md"
+		role="status"
+	>
 		<span class="text-sm text-gray-700"> Zoom : </span>
 		<progress
 			max={MAX_ZOOM}
@@ -272,9 +275,8 @@
 		>
 			{Math.round(zoomFactor * 100) / 100}
 		</progress>
-
+		<!--
 		<br />
-
 		<span class="text-gray-700 text-sm">
 			X : {Math.round(relativeX * 100)}%
 		</span>
@@ -282,6 +284,7 @@
 		<span class="text-gray-700 text-sm">
 			Y : {Math.round(relativeY * 100)}%
 		</span>
+    -->
 	</div>
 {/if}
 
