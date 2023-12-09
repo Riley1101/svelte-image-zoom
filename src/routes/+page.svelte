@@ -1,17 +1,7 @@
-<div class="p-4">
-	<h2 class="text-2xl mb-4">Image Diff Tool</h2>
-	<ul class="flex flex-col gap-4">
-		<li>
-			<a href="/zoomist">Zoomist</a>
-		</li>
-		<li>
-			<a href="/loupe">loupe</a>
-		</li>
-	</ul>
-	<h2 class="text-2xl mb-2">Archive</h2>
-	<ul class="flex gap-4 flex-col">
-		<li>
-			<a href="/archive">Archive</a>
-		</li>
-	</ul>
+<script lang="ts">
+	import ImageLoupe from '$lib/loupe/ImageLoupe.svelte';
+</script>
+
+<div class="p-4 justify-center grid pt-24">
+	<ImageLoupe showStats />
 </div>

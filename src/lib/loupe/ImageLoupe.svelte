@@ -3,17 +3,22 @@
 	let comparismImage: HTMLDivElement;
 	let glass: HTMLDivElement;
 
+	export let showStats = false;
+
 	let MIN_ZOOM = 0.5;
 	let MAX_ZOOM = 3;
+
+	let glassWidth = 400;
+	let glassHeight = 400;
+
 	let relativeX = 0;
 	let relativeY = 0;
+
 	let glassoffsetX = 0;
 	let glassoffsetY = 0;
+
 	let showZoom = true;
 	let zoomFactor = 0.6;
-
-	let glassWidth = 900;
-	let glassHeight = 900;
 
 	let isComparing = false;
 
@@ -40,16 +45,16 @@
 	function moveRegularImage() {
 		glass.style.setProperty(
 			'--left',
-			`calc(${relativeX * 100}% - ${400 / 2}px + ${glassoffsetX}px - 4px)`
+			`calc(${relativeX * 100}% - ${glassWidth / 2}px + ${glassoffsetX}px - 4px)`
 		);
 		glass.style.setProperty(
 			'--top',
-			`calc(${relativeY * 100}% - ${400 / 2}px + ${glassoffsetY}px - 4px)`
+			`calc(${relativeY * 100}% - ${glassHeight / 2}px + ${glassoffsetY}px - 4px)`
 		);
 		glass.style.setProperty(
 			'background-position',
-			`calc(${relativeX * 100}% + ${400 / 2}px - ${relativeX * 400}px) 
-             calc(${relativeY * 100}% + ${400 / 2}px - ${relativeY * 400}px)`
+			`calc(${relativeX * 100}% + ${glassWidth / 2}px - ${relativeX * 400}px) 
+             calc(${relativeY * 100}% + ${glassHeight / 2}px - ${relativeY * 400}px)`
 		);
 
 		glass.style.setProperty(
@@ -63,17 +68,17 @@
 
 		comparismImage.style.setProperty(
 			'--left',
-			`calc(${relativeX * 100}% - ${400 / 2}px + ${glassoffsetX}px - 4px)`
+			`calc(${relativeX * 100}% - ${glassWidth / 2}px + ${glassoffsetX}px - 4px)`
 		);
 		comparismImage.style.setProperty(
 			'--top',
-			`calc(${relativeY * 100}% - ${400 / 2}px + ${glassoffsetY}px - 4px)`
+			`calc(${relativeY * 100}% - ${glassHeight / 2}px + ${glassoffsetY}px - 4px)`
 		);
 		comparismImage.style.setProperty(
 			'background-position',
-			`calc(${relativeX * 100}% + ${400 / 2}px - ${relativeX * 400}px) calc(${relativeY * 100}% + ${
-				400 / 2
-			}px - ${relativeY * 400}px)`
+			`calc(${relativeX * 100}% + ${glassWidth / 2}px - ${relativeX * 400}px) calc(${
+				relativeY * 100
+			}% + ${400 / 2}px - ${relativeY * 400}px)`
 		);
 		comparismImage.style.setProperty(
 			'background-size',
@@ -107,7 +112,6 @@
 	function onMouseWheel(e: WheelEvent) {
 		if (!imgBounds) return;
 		let direction = e.deltaY < 0 ? 1 : -1;
-		// keep zoom factor between MAX_ZOOM and MIN_ZOOM
 		if (direction === 1) {
 			if (zoomFactor >= MAX_ZOOM) return;
 			zoomFactor += 0.1;
@@ -132,7 +136,7 @@
 	}
 </script>
 
-<div class="overflow-hidden relative border border-red-400">
+<div class="overflow-hidden relative border border-gray-200 max-w-max rounded-md w-full">
 	<div role="button" tabindex="0" on:mousedown={onMouseDown} on:mouseup={onMouseUp}>
 		<img
 			on:blur={() => {}}
@@ -147,18 +151,16 @@
 			alt="low res business monkey absolute"
 			bind:this={img}
 			draggable="false"
-			class="aspect-square max-w-[200px] md:max-w-[600px]"
+			class="aspect-square w-full md:max-w-[600px]"
 			on:wheel={onMouseWheel}
 		/>
 	</div>
 
 	{#if imgBounds}
 		<div
-			bind:clientWidth={glassWidth}
-			bind:clientHeight={glassHeight}
 			class:opacity-0={!showZoom}
 			bind:this={glass}
-			class="magnifying_glass absolute z-12 border-4 overflow-hidden pointer-events-none grid"
+			class="magnifying_glass absolute z-12 rounded-full border border-gray-400 overflow-hidden pointer-events-none grid"
 		>
 			<div
 				bind:this={comparismImage}
@@ -168,6 +170,30 @@
 		</div>
 	{/if}
 </div>
+{#if showStats}
+	<div class="mt-4 text-gray-800 border border-gray-200 max-w-max p-4 rounded-md">
+		<span class="text-sm text-gray-700"> Zoom : </span>
+		<progress
+			max={MAX_ZOOM}
+			value={zoomFactor}
+			class=" rounded-md appearance-none h-[10px]
+        [&::-webkit-progress-bar]:rounded-lg
+        [&::-webkit-progress-value]:rounded-lg
+        [&::-webkit-progress-bar]:bg-slate-300
+        [&::-webkit-progress-value]:bg-red-500
+        [&::-moz-progress-bar]:bg-violet-400"
+		>
+			{Math.round(zoomFactor * 100) / 100}
+		</progress>
+		<br />
+		<span class="text-gray-700 text-sm">
+			X : {Math.round(relativeX * 100)}%
+		</span>
+		<span class="text-gray-700 text-sm">
+			Y : {Math.round(relativeY * 100)}%
+		</span>
+	</div>
+{/if}
 
 <style>
 	.comparism_image {

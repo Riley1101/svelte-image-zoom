@@ -11,7 +11,7 @@
 	let zoomerOptions: ZoomistOptions = {
 		slider: false,
 		zoomer: false,
-		maxScale: 4,
+		maxScale: 10,
 		bounds: true
 	};
 
@@ -22,8 +22,6 @@
 		let percent = mousePosition / boundingRect.width;
 		let clip = 100 - percent * 100;
 		previewImage.style.setProperty('--width', clip.toString() + '%');
-
-		// move indicator
 		indicator.style.setProperty('--left', `${percent * 100}%`);
 	}
 
@@ -32,7 +30,7 @@
 	});
 </script>
 
-<div on:mousemove={onMouseMove} role="button" tabindex="0">
+<div on:mousemove={onMouseMove} role="button" tabindex="0" class="rounded-md overflow-hidden">
 	<div class="zoomist-container" bind:this={zoomistContainer}>
 		<div class="zoomist-wrapper">
 			<div class="zoomist-image relative">
@@ -44,7 +42,7 @@
 				</div>
 				<div
 					bind:this={indicator}
-					class="w-[3px] h-full bg-gray-200/30 absolute top-0 left-0 z-100 indicator tralsate-x-[-100%] flex items-center"
+					class="w-[3px] h-full bg-gray-400/80 absolute top-0 left-0 z-100 indicator tralsate-x-[-100%] flex items-center"
 				></div>
 			</div>
 		</div>

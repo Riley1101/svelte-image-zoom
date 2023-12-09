@@ -1,23 +1,22 @@
 <script>
-	import ImagePreview from '$lib/scratch/ImagePreview.svelte';
+	import ImageZoom from '$lib/zoom/ImageZoom.svelte';
 </script>
 
-<main class="p-4 h-screen grid place-items-center">
-	<ImagePreview>
+<div class="p-4 justify-center grid pt-24">
+	<ImageZoom>
 		<img
-			slot="first"
 			src={'/lowres.webp'}
 			alt="low resolution rabbit man"
 			class="w-full"
 			draggable="false"
+			slot="first"
 		/>
-
 		<img
-			slot="second"
 			src={'/highres.webp'}
 			alt="high resolution rabbit man"
 			class="w-full"
 			draggable="false"
+			slot="second"
 		/>
-	</ImagePreview>
-</main>
+	</ImageZoom>
+</div>

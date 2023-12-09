@@ -68,6 +68,9 @@
 		indicator.style.setProperty('--left', `${percent * 100}%`);
 
 		// math mouse position with zoom
+		mousePosition = mousePosition * imageState.currentZoom;
+
+		previewImage.style.setProperty('--width', mousePosition.toString() + 'px');
 
 		// for panning
 		if (!isPanning) return;
@@ -109,7 +112,7 @@
 	role="button"
 	tabindex="0"
 	on:mousemove={onCompareMove}
-	class="border-2 relative w-full p-0 overflow-hidden max-w-max border-zinc-700 rounded-md cursor-pointer"
+	class="border-2 relative w-full p-0 overflow-hidden max-w-max rounded-md cursor-pointer"
 >
 	<div
 		role="button"
@@ -139,19 +142,19 @@
 		></div>
 	</div>
 </div>
-<div class="text-white p-4 border rounded-md border-zinc-700 max-w-max mt-4 flex gap-4">
-	<span class="text-zinc-400">
+<div class=" p-4 border rounded-md border-zinc-700 max-w-max mt-4 flex gap-4">
+	<span>
 		is panning: {isPanning}
 	</span>
 
-	<span class="text-zinc-400">
+	<span>
 		Current zoom: {imageState.currentZoom}
 	</span>
-	<span class="text-zinc-400">
+	<span>
 		TranslateX: {imageState.currentTranslateX}
 		/ {imageState.availableTranslateX}
 	</span>
-	<span class="text-zinc-400">
+	<span>
 		TranslateY: {imageState.currentTranslateY}
 		/ {imageState.availableTranslateY}
 	</span>
