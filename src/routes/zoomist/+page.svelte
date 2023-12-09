@@ -24,15 +24,18 @@
 <main class="p-4 bg-zinc-800 h-screen grid place-items-center">
 	<ImagePreview>
 		<img
-			src={images[currentIndex].image}
+			src={images[0].image}
 			alt="low resolution rabbit man"
 			class="w-full"
 			draggable="false"
+			slot="first"
+		/>
+		<img
+			src={images[1].image}
+			alt="high resolution rabbit man"
+			class="w-full"
+			draggable="false"
+			slot="second"
 		/>
 	</ImagePreview>
-	<div class="text-zinc-300 text-xl mt-4 flex gap-4">
-		<button class="border border-zinc-700 px-4 py-2 rounded-md" on:click={nextImage}>
-			{images[currentIndex].name}
-		</button>
-	</div>
 </main>

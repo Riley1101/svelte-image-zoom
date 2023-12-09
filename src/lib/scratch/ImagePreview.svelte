@@ -47,6 +47,17 @@
 	}
 
 	let mousePosition = 0;
+
+	function onCompareMove(e: MouseEvent) {
+		let { clientX } = e;
+		// for image compare
+		let boundingRect = imageContainer.getBoundingClientRect();
+		mousePosition = clientX - boundingRect.left;
+
+		let percent = mousePosition / boundingRect.width;
+		indicator.style.setProperty('--left', `${percent * 100}%`);
+	}
+
 	function onMouseMove(e: MouseEvent) {
 		let { movementX, movementY, clientX } = e;
 		// for image compare
@@ -57,9 +68,6 @@
 		indicator.style.setProperty('--left', `${percent * 100}%`);
 
 		// math mouse position with zoom
-		mousePosition = mousePosition * imageState.currentZoom;
-
-		previewImage.style.setProperty('--width', mousePosition.toString() + 'px');
 
 		// for panning
 		if (!isPanning) return;
@@ -98,13 +106,16 @@
 </script>
 
 <div
+	role="button"
+	tabindex="0"
+	on:mousemove={onCompareMove}
 	class="border-2 relative w-full p-0 overflow-hidden max-w-max border-zinc-700 rounded-md cursor-pointer"
 >
 	<div
 		role="button"
 		tabindex="0"
 		aria-label="Image preview"
-		class="image-container relative aspect-square w-[1000px] select-none"
+		class="image-container relative aspect-square select-none w-[200px] md:w-[600px]"
 		bind:this={imageContainer}
 		on:mouseleave={onMouseLeave}
 		on:wheel={onZoom}

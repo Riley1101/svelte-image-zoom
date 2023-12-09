@@ -1,7 +1,4 @@
 <script lang="ts">
-	export let firstImageUrl = '/lowres.webp';
-	// export let secondImageUrl = '/highres.webp';
-
 	let img: HTMLImageElement, imgBounds: DOMRect;
 	let comparismImage: HTMLDivElement;
 	let glass: HTMLDivElement;
@@ -49,7 +46,6 @@
 			'--top',
 			`calc(${relativeY * 100}% - ${400 / 2}px + ${glassoffsetY}px - 4px)`
 		);
-
 		glass.style.setProperty(
 			'background-position',
 			`calc(${relativeX * 100}% + ${400 / 2}px - ${relativeX * 400}px) 
@@ -79,7 +75,6 @@
 				400 / 2
 			}px - ${relativeY * 400}px)`
 		);
-
 		comparismImage.style.setProperty(
 			'background-size',
 			`${zoomFactor * imgBounds.width}% ${zoomFactor * imgBounds.height}%`
@@ -127,21 +122,18 @@
 		);
 	}
 
-	function makeGlassSizeLarge() {
-		if (!glass) return;
-	}
-
 	function onMouseDown() {
 		isComparing = true;
 		moveComparismImage();
 	}
+
 	function onMouseUp() {
 		isComparing = false;
 	}
 </script>
 
 <div class="overflow-hidden relative border border-red-400">
-	<button on:mousedown={onMouseDown} on:mouseup={onMouseUp}>
+	<div role="button" tabindex="0" on:mousedown={onMouseDown} on:mouseup={onMouseUp}>
 		<img
 			on:blur={() => {}}
 			on:load={calculateImageBounds}
@@ -151,14 +143,14 @@
 			on:touchmove={onTouchMove}
 			on:mouseout={() => (showZoom = false)}
 			on:touchend={() => (showZoom = false)}
-			src={firstImageUrl}
+			src={'/highres.webp'}
 			alt="low res business monkey absolute"
 			bind:this={img}
 			draggable="false"
 			class="aspect-square max-w-[200px] md:max-w-[600px]"
 			on:wheel={onMouseWheel}
 		/>
-	</button>
+	</div>
 
 	{#if imgBounds}
 		<div
@@ -179,7 +171,7 @@
 
 <style>
 	.comparism_image {
-		--background-image: url('/highres.webp');
+		--background-image: url('/lowres.webp');
 		--width: 400px;
 		--height: 400px;
 		--left: 0%;
@@ -192,7 +184,7 @@
 		background-image: var(--background-image);
 	}
 	.magnifying_glass {
-		--background-image: url('/lowres.webp');
+		--background-image: url('/highres.webp');
 		--left: 0%;
 		--top: 0%;
 		--width: 400px;
