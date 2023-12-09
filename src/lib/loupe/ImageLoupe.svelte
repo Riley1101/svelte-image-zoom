@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+
 	export let showStats = false;
 
 	let img: HTMLImageElement, imgBounds: DOMRect;
@@ -25,7 +27,31 @@
 	let mgMouseOffsetX = 0,
 		mgMouseOffsetY = 0;
 
+	onMount(() => {
+		// show glass if touch device
+		if ('ontouchstart' in window) {
+			showZoom = true;
+			isComparing = true;
+			zoomFactor = 1.8;
+			resizeGlass(200, 200);
+			calculateImageBounds();
+			moveRegularImage();
+			moveComparismImage();
+		}
+	});
+
+	function resizeGlass(width: number, height: number) {
+		if (!glass || !comparismImage) return;
+		glassWidth = width;
+		glassHeight = height;
+		comparismImage.style.setProperty('--width', `${width}px`);
+		comparismImage.style.setProperty('--height', `${height}px`);
+		glass.style.setProperty('--width', `${width}px`);
+		glass.style.setProperty('--height', `${height}px`);
+	}
+
 	function moveRegularImage() {
+		if (!glass) return;
 		glass.style.setProperty(
 			'--left',
 			`calc(${relativeX * 100}% - ${glassWidth / 2}px + ${glassoffsetX}px - 4px)`
@@ -77,16 +103,16 @@
 		const target = e.target as HTMLElement;
 
 		let _relX = (e.touches[0].clientX - imgBounds.left) / target.clientWidth;
-		let _relY = (e.touches[0].clientY - imgBounds.left) / target.clientHeight;
+		let _relY = (e.touches[0].clientY - imgBounds.top) / target.clientHeight;
 
 		if (_relX >= 0 && _relY >= 0 && _relX <= 1 && _relY <= 1) {
-			glassoffsetY = mgMouseOffsetX;
-			glassoffsetY = mgMouseOffsetY;
 			relativeX = _relX;
 			relativeY = _relY;
+			glassoffsetX = _relX * 200;
+			glassoffsetY = _relY * 200;
+			moveRegularImage();
+			moveComparismImage();
 			showZoom = true;
-		} else {
-			showZoom = false;
 		}
 	}
 
@@ -139,10 +165,38 @@
 	function onMouseUp() {
 		isComparing = false;
 	}
+
+	function onTouchStart() {
+		showZoom = true;
+		moveComparismImage();
+	}
+
+	function compare() {
+		isComparing = !isComparing;
+	}
+
+	function zoomIn() {
+		if (!imgBounds) return;
+		if (zoomFactor >= MAX_ZOOM) return;
+		zoomFactor += 0.1;
+
+		moveRegularImage();
+		moveComparismImage();
+	}
+	function zoomOut() {
+		if (!imgBounds) return;
+		if (zoomFactor <= MIN_ZOOM) return;
+		zoomFactor -= 0.1;
+		moveRegularImage();
+		moveComparismImage();
+	}
 </script>
 
-<div class="overflow-hidden relative border border-gray-200 max-w-max rounded-md w-full">
+<div
+	class="overflow-hidden relative border border-gray-200 max-w-max rounded-md w-full user-select-none"
+>
 	<div
+		on:touchstart={onTouchStart}
 		role="button"
 		tabindex="0"
 		on:mousedown={onMouseDown}
@@ -153,16 +207,15 @@
 			on:blur={() => {}}
 			on:load={calculateImageBounds}
 			on:mouseenter={calculateImageBounds}
-			on:touchstart|preventDefault={calculateImageBounds}
-			on:mousemove={onMouseMove}
-			on:touchmove={onTouchMove}
+			on:touchstart={calculateImageBounds}
+			on:mousemove|preventDefault={onMouseMove}
+			on:touchmove|preventDefault={onTouchMove}
 			on:mouseout={() => (showZoom = false)}
-			on:touchend={() => (showZoom = false)}
 			src={'/highres.webp'}
 			alt="High resolution business monkey "
 			bind:this={img}
 			draggable="false"
-			class="aspect-square w-full md:max-w-[600px]"
+			class="aspect-square w-full md:max-w-[600px] user-select-none"
 			on:wheel={onMouseWheel}
 		/>
 	</div>
@@ -181,6 +234,27 @@
 			></div>
 		</div>
 	{/if}
+</div>
+<div class="flex gap-2 mt-4">
+	<button
+		class:bg-red-500={isComparing}
+		class:text-white={isComparing}
+		on:click={compare}
+		aria-label="Compare button"
+		class="text-sm border px-4 py-2 rounded-md border-gray-200">Compare</button
+	>
+
+	<button
+		on:click={zoomIn}
+		aria-label="Click to Zoom In "
+		class="text-sm border px-4 py-2 rounded-md border-gray-200">Zoom In</button
+	>
+
+	<button
+		on:click={zoomOut}
+		aria-label="Click to Zoom Out"
+		class="text-sm border px-4 py-2 rounded-md border-gray-200">Zoom Out</button
+	>
 </div>
 
 {#if showStats}
@@ -237,5 +311,16 @@
 		left: var(--left);
 		top: var(--top);
 		background-image: var(--background-image);
+	}
+
+	@media (max-width: 640px) {
+		.magnifying_glass {
+			--width: 200px;
+			--height: 200px;
+		}
+		.comparism_image {
+			--width: 200px;
+			--height: 200px;
+		}
 	}
 </style>
