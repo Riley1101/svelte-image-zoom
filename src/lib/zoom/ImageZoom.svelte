@@ -30,7 +30,13 @@
 	});
 </script>
 
-<div on:mousemove={onMouseMove} role="button" tabindex="0" class="rounded-md overflow-hidden">
+<div
+	on:mousemove={onMouseMove}
+	role="button"
+	tabindex="0"
+	class="rounded-md overflow-hidden"
+	aria-label="Zoomable Container"
+>
 	<div class="zoomist-container" bind:this={zoomistContainer}>
 		<div class="zoomist-wrapper">
 			<div class="zoomist-image relative">

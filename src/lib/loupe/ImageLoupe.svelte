@@ -1,9 +1,9 @@
 <script lang="ts">
+	export let showStats = false;
+
 	let img: HTMLImageElement, imgBounds: DOMRect;
 	let comparismImage: HTMLDivElement;
 	let glass: HTMLDivElement;
-
-	export let showStats = false;
 
 	let MIN_ZOOM = 0.5;
 	let MAX_ZOOM = 3;
@@ -24,23 +24,6 @@
 
 	let mgMouseOffsetX = 0,
 		mgMouseOffsetY = 0;
-
-	function onMouseMove(e: MouseEvent) {
-		if (!imgBounds) return;
-
-		const target = e.target as HTMLElement;
-
-		relativeX = (e.clientX - imgBounds.left) / target.clientWidth;
-		relativeY = (e.clientY - imgBounds.top) / target.clientHeight;
-
-		glassoffsetX = mgMouseOffsetX;
-		glassoffsetY = mgMouseOffsetY;
-
-		moveRegularImage();
-		moveComparismImage();
-
-		showZoom = true;
-	}
 
 	function moveRegularImage() {
 		glass.style.setProperty(
@@ -70,16 +53,19 @@
 			'--left',
 			`calc(${relativeX * 100}% - ${glassWidth / 2}px + ${glassoffsetX}px - 4px)`
 		);
+
 		comparismImage.style.setProperty(
 			'--top',
 			`calc(${relativeY * 100}% - ${glassHeight / 2}px + ${glassoffsetY}px - 4px)`
 		);
+
 		comparismImage.style.setProperty(
 			'background-position',
 			`calc(${relativeX * 100}% + ${glassWidth / 2}px - ${relativeX * 400}px) calc(${
 				relativeY * 100
 			}% + ${400 / 2}px - ${relativeY * 400}px)`
 		);
+
 		comparismImage.style.setProperty(
 			'background-size',
 			`${zoomFactor * imgBounds.width}% ${zoomFactor * imgBounds.height}%`
@@ -111,7 +97,9 @@
 
 	function onMouseWheel(e: WheelEvent) {
 		if (!imgBounds) return;
+
 		let direction = e.deltaY < 0 ? 1 : -1;
+
 		if (direction === 1) {
 			if (zoomFactor >= MAX_ZOOM) return;
 			zoomFactor += 0.1;
@@ -126,6 +114,23 @@
 		);
 	}
 
+	function onMouseMove(e: MouseEvent) {
+		if (!imgBounds) return;
+
+		const target = e.target as HTMLElement;
+
+		relativeX = (e.clientX - imgBounds.left) / target.clientWidth;
+		relativeY = (e.clientY - imgBounds.top) / target.clientHeight;
+
+		glassoffsetX = mgMouseOffsetX;
+		glassoffsetY = mgMouseOffsetY;
+
+		moveRegularImage();
+		moveComparismImage();
+
+		showZoom = true;
+	}
+
 	function onMouseDown() {
 		isComparing = true;
 		moveComparismImage();
@@ -137,7 +142,13 @@
 </script>
 
 <div class="overflow-hidden relative border border-gray-200 max-w-max rounded-md w-full">
-	<div role="button" tabindex="0" on:mousedown={onMouseDown} on:mouseup={onMouseUp}>
+	<div
+		role="button"
+		tabindex="0"
+		on:mousedown={onMouseDown}
+		on:mouseup={onMouseUp}
+		aria-label="Zoomable image with Loupe"
+	>
 		<img
 			on:blur={() => {}}
 			on:load={calculateImageBounds}
@@ -148,7 +159,7 @@
 			on:mouseout={() => (showZoom = false)}
 			on:touchend={() => (showZoom = false)}
 			src={'/highres.webp'}
-			alt="low res business monkey absolute"
+			alt="High resolution business monkey "
 			bind:this={img}
 			draggable="false"
 			class="aspect-square w-full md:max-w-[600px]"
@@ -161,6 +172,7 @@
 			class:opacity-0={!showZoom}
 			bind:this={glass}
 			class="magnifying_glass absolute z-12 rounded-full border border-gray-400 overflow-hidden pointer-events-none grid"
+			aria-label="Magnifying glass that shows zoomed in image"
 		>
 			<div
 				bind:this={comparismImage}
@@ -170,25 +182,29 @@
 		</div>
 	{/if}
 </div>
+
 {#if showStats}
-	<div class="mt-4 text-gray-800 border border-gray-200 max-w-max p-4 rounded-md">
+	<div class="mt-4 text-gray-800 border border-gray-200 max-w-max p-4 rounded-md" role="status">
 		<span class="text-sm text-gray-700"> Zoom : </span>
 		<progress
 			max={MAX_ZOOM}
 			value={zoomFactor}
-			class=" rounded-md appearance-none h-[10px]
-        [&::-webkit-progress-bar]:rounded-lg
-        [&::-webkit-progress-value]:rounded-lg
-        [&::-webkit-progress-bar]:bg-slate-300
-        [&::-webkit-progress-value]:bg-red-500
-        [&::-moz-progress-bar]:bg-violet-400"
+			class="rounded-md appearance-none h-[10px]
+                [&::-webkit-progress-bar]:rounded-lg
+                [&::-webkit-progress-value]:rounded-lg
+                [&::-webkit-progress-bar]:bg-slate-300
+                [&::-webkit-progress-value]:bg-red-500
+                [&::-moz-progress-bar]:bg-violet-400"
 		>
 			{Math.round(zoomFactor * 100) / 100}
 		</progress>
+
 		<br />
+
 		<span class="text-gray-700 text-sm">
 			X : {Math.round(relativeX * 100)}%
 		</span>
+		/
 		<span class="text-gray-700 text-sm">
 			Y : {Math.round(relativeY * 100)}%
 		</span>
