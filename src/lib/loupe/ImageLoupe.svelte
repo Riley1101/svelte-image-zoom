@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import Icon from '@iconify/svelte';
 
 	export let showStats = false;
 
@@ -241,20 +242,24 @@
 		class:text-white={isComparing}
 		on:click={compare}
 		aria-label="Compare button"
-		class="text-sm border px-4 py-2 rounded-md border-gray-200">Compare</button
+		class="text-sm border px-4 py-2 rounded-md border-gray-200">Check Original Image</button
 	>
 
 	<button
 		on:click={zoomIn}
 		aria-label="Click to Zoom In "
-		class="text-sm border px-4 py-2 rounded-md border-gray-200">Zoom In</button
+		class="border p-2 grid place-items-center rounded-md border-gray-200 hover:bg-red-500 hover:text-white"
 	>
+		<Icon icon="ic:baseline-zoom-in" class="text-2xl " />
+	</button>
 
 	<button
 		on:click={zoomOut}
 		aria-label="Click to Zoom Out"
-		class="text-sm border px-4 py-2 rounded-md border-gray-200">Zoom Out</button
+		class="border p-2 grid place-items-center rounded-md border-gray-200 hover:bg-red-500 hover:text-white"
 	>
+		<Icon icon="ic:baseline-zoom-out" class="text-2xl " />
+	</button>
 </div>
 
 {#if showStats}
@@ -264,6 +269,7 @@
 	>
 		<span class="text-sm text-gray-700"> Zoom : </span>
 		<progress
+			aria-label="Zoom factor {zoomFactor}"
 			max={MAX_ZOOM}
 			value={zoomFactor}
 			class="rounded-md appearance-none h-[10px]
